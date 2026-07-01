@@ -1,0 +1,73 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Beyond Productivity (AOM 2026 PDW) — registration backend.
+  HTTP API -> Lambda -> DynamoDB. Submit is public (CORS-locked);
+  reads happen locally via export.mjs using the organizer's AWS credentials.
+
+Parameters:
+  AllowOrigin:
+    Type: String
+    Description: >
+      Exact origin allowed to POST (your GitHub Pages URL, no trailing slash).
+      Use "*" only for local testing.
+    Default: "*"
+
+Globals:
+  Function:
+    Timeout: 10
+    MemorySize: 128
+    Runtime: nodejs18.x
+
+Resources:
+  RegistrationsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: BeyondProductivityRegistrations
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: email
+          AttributeType: S
+      KeySchema:
+        - AttributeName: email
+          KeyType: HASH
+
+  SubmitFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: submit.handler
+      CodeUri: src/
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref RegistrationsTable
+          ALLOW_ORIGIN: !Ref AllowOrigin
+      Policies:
+        - DynamoDBWritePolicy:
+            TableName: !Ref RegistrationsTable
+      Events:
+        Register:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Path: /register
+            Method: POST
+
+  HttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      CorsConfiguration:
+        AllowOrigins:
+          - !Ref AllowOrigin
+        AllowHeaders:
+          - content-type
+        AllowMethods:
+          - POST
+          - OPTIONS
+
+Outputs:
+  ApiEndpoint:
+    Description: "Paste this (with /register) into script.js API_ENDPOINT"
+    Value: !Sub "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com/register"
+  TableName:
+    Description: "DynamoDB table name (used by export.mjs)"
+    Value: !Ref RegistrationsTable

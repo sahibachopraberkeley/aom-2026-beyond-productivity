@@ -1,0 +1,11 @@
+# AWS SAM build artifacts
+backend/.aws-sam/
+backend/samconfig.toml
+
+# Exported registrant data — never commit PII
+backend/registrations.csv
+backend/suggested-groups.csv
+
+# OS / editor
+.DS_Store
+node_modules/
