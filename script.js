@@ -1,5 +1,5 @@
 /* =========================================================================
-   Beyond Productivity — AOM 2026 PDW
+   Beyond AI Productivity · AOM 2026 PDW
    ========================================================================= */
 
 // ── CONFIG ────────────────────────────────────────────────────────────────
@@ -7,13 +7,13 @@
 // here. Leave as-is to run the site in "demo" mode (logs instead of posting).
 const API_ENDPOINT = ""; // e.g. "https://abc123.execute-api.us-east-1.amazonaws.com/register"
 
-// Roundtables — order here is the order shown in the ranking grid.
+// Roundtables: order here is the order shown in the ranking grid.
 const ROUNDTABLES = [
-  { id: "R1", leader: "Mathijs de Vaan", short: "Measuring adoption from behavioral trace data" },
-  { id: "R2", leader: "Natalie Carlson", short: "Generating & evaluating candidate mechanisms" },
-  { id: "R3", leader: "Charles Ayoubi", short: "How AI-mediated information reshapes evaluation" },
-  { id: "R4", leader: "Sahiba Chopra", short: "Work & evaluation in collaborative settings" },
-  { id: "R5", leader: "Michael Impink", short: "Technology–skill complementarity, historically" },
+  { id: "R1", leader: "Natalie Carlson", short: "Generating & evaluating candidate mechanisms" },
+  { id: "R2", leader: "Charles Ayoubi", short: "How AI-mediated information reshapes evaluation" },
+  { id: "R3", leader: "Michael Impink", short: "Technology–skill complementarity, historically" },
+  { id: "R4", leader: "Mathijs de Vaan", short: "Measuring adoption from behavioral trace data" },
+  { id: "R5", leader: "Sahiba Chopra", short: "Work & evaluation in collaborative settings" },
 ];
 
 // ── Build the ranking grid ────────────────────────────────────────────────
@@ -32,7 +32,7 @@ ROUNDTABLES.forEach((rt) => {
     input.type = "radio";
     input.name = `rank_${rt.id}`;
     input.value = String(rank);
-    input.setAttribute("aria-label", `${rt.id} — rank ${rank}`);
+    input.setAttribute("aria-label", `${rt.id}, rank ${rank}`);
     cell.appendChild(input);
     row.appendChild(cell);
   }
@@ -103,7 +103,7 @@ form.addEventListener("submit", async (e) => {
 
   try {
     if (!API_ENDPOINT) {
-      // Demo mode — backend not wired up yet.
+      // Demo mode: backend not wired up yet.
       console.info("[demo] would POST:", payload);
       await new Promise((r) => setTimeout(r, 500));
       throw new DemoNotWired();
@@ -116,13 +116,13 @@ form.addEventListener("submit", async (e) => {
     if (!res.ok) throw new Error(`Server responded ${res.status}`);
 
     statusEl.classList.add("is-success");
-    statusEl.textContent = "✓ You're registered — thank you! We'll be in touch about the roundtables.";
+    statusEl.textContent = "✓ You're registered, thank you! We'll be in touch about the roundtables.";
     form.reset();
     rankGridEl.querySelectorAll("input:checked").forEach((i) => (i.checked = false));
   } catch (err) {
     if (err instanceof DemoNotWired) {
       statusEl.classList.add("is-success");
-      statusEl.textContent = "✓ Looks good! (Demo mode — connect the AWS endpoint in script.js to go live.)";
+      statusEl.textContent = "✓ Looks good! (Demo mode: connect the AWS endpoint in script.js to go live.)";
       form.reset();
       rankGridEl.querySelectorAll("input:checked").forEach((i) => (i.checked = false));
     } else {
