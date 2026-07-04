@@ -9,11 +9,11 @@ const API_ENDPOINT = "https://x4h3z2cxc2.execute-api.us-east-1.amazonaws.com/reg
 
 // Roundtables: order here is the order shown in the ranking grid.
 const ROUNDTABLES = [
-  { id: "R1", leader: "Natalie Carlson", short: "Using LLMs to systematize mechanism discovery" },
-  { id: "R2", leader: "Charles Ayoubi", short: "Lost in Compression: AI summarization & innovation evaluation" },
-  { id: "R3", leader: "Michael Impink", short: "Training for digital tool use: Swiss watchmaking" },
-  { id: "R4", leader: "Mathijs de Vaan", short: "Mapping the social & structural dynamics of AI adoption" },
-  { id: "R5", leader: "Sahiba Chopra", short: "Effort opacity: GenAI & reciprocal effort in collaborative work" },
+  { id: "R1", leader: "Natalie Carlson", short: "Generating & evaluating candidate mechanisms" },
+  { id: "R2", leader: "Charles Ayoubi", short: "How AI-mediated information reshapes evaluation" },
+  { id: "R3", leader: "Michael Impink", short: "The co-evolution of technology, skill, and training" },
+  { id: "R4", leader: "Mathijs de Vaan", short: "Measuring adoption from behavioral trace data" },
+  { id: "R5", leader: "Sahiba Chopra", short: "Work & evaluation in collaborative settings" },
 ];
 
 // ── Build the ranking grid ────────────────────────────────────────────────
