@@ -16,54 +16,96 @@ const ROUNDTABLES = [
   { id: "R5", leader: "Sahiba Chopra", short: "Work & evaluation in collaborative settings" },
 ];
 
-// ── Build the ranking grid ────────────────────────────────────────────────
-const rankGridEl = document.querySelector("#rankGrid .rank__grid");
-ROUNDTABLES.forEach((rt) => {
-  const row = document.createElement("div");
-  row.className = "rank__row";
-  const topic = document.createElement("span");
-  topic.className = "rank__topic";
-  topic.innerHTML = `<b>${rt.id}</b> · ${rt.leader} <small>${rt.short}</small>`;
-  row.appendChild(topic);
-  for (let rank = 1; rank <= 5; rank++) {
-    const cell = document.createElement("span");
-    cell.className = "rank__cell";
-    const input = document.createElement("input");
-    input.type = "radio";
-    input.name = `rank_${rt.id}`;
-    input.value = String(rank);
-    input.setAttribute("aria-label", `${rt.id}, rank ${rank}`);
-    cell.appendChild(input);
-    row.appendChild(cell);
-  }
-  rankGridEl.appendChild(row);
-});
-
-// Enforce unique ranks: selecting a rank clears that rank from other rows.
+// ── Build the drag-and-drop ranking list ──────────────────────────────────
+const rankListEl = document.getElementById("rankList");
 const rankError = document.getElementById("rankError");
-rankGridEl.addEventListener("change", (e) => {
-  if (e.target.type !== "radio") return;
-  const chosen = e.target.value;
-  const ownRow = e.target.closest(".rank__row");
-  rankGridEl.querySelectorAll(".rank__row").forEach((row) => {
-    if (row === ownRow) return;
-    const clash = row.querySelector(`input[value="${chosen}"]`);
-    if (clash && clash.checked) clash.checked = false;
-  });
-  rankError.hidden = true;
+
+ROUNDTABLES.forEach((rt) => {
+  const li = document.createElement("li");
+  li.className = "ranklist__item";
+  li.draggable = true;
+  li.dataset.id = rt.id;
+  li.innerHTML = `
+    <span class="ranklist__num" aria-hidden="true"></span>
+    <span class="ranklist__grip" aria-hidden="true">⠿</span>
+    <span class="ranklist__label"><b>${rt.leader}</b><small>${rt.short}</small></span>
+    <span class="ranklist__moves">
+      <button type="button" class="ranklist__move" data-dir="up" aria-label="Move ${rt.leader} up">↑</button>
+      <button type="button" class="ranklist__move" data-dir="down" aria-label="Move ${rt.leader} down">↓</button>
+    </span>`;
+  rankListEl.appendChild(li);
 });
 
-function collectRanks() {
-  const ranks = {};
-  for (const rt of ROUNDTABLES) {
-    const picked = rankGridEl.querySelector(`input[name="rank_${rt.id}"]:checked`);
-    if (!picked) return null; // incomplete
-    ranks[rt.id] = Number(picked.value);
+function renumber() {
+  [...rankListEl.children].forEach((li, i) => {
+    li.querySelector(".ranklist__num").textContent = i + 1;
+  });
+}
+renumber();
+
+// Drag to reorder (desktop / mouse)
+let dragEl = null;
+rankListEl.addEventListener("dragstart", (e) => {
+  dragEl = e.target.closest(".ranklist__item");
+  if (!dragEl) return;
+  dragEl.classList.add("is-dragging");
+  e.dataTransfer.effectAllowed = "move";
+});
+rankListEl.addEventListener("dragend", () => {
+  if (dragEl) dragEl.classList.remove("is-dragging");
+  dragEl = null;
+  renumber();
+});
+rankListEl.addEventListener("dragover", (e) => {
+  e.preventDefault();
+  if (!dragEl) return;
+  const after = dragAfter(e.clientY);
+  if (after == null) rankListEl.appendChild(dragEl);
+  else rankListEl.insertBefore(dragEl, after);
+});
+function dragAfter(y) {
+  const items = [...rankListEl.querySelectorAll(".ranklist__item:not(.is-dragging)")];
+  return items.reduce(
+    (closest, child) => {
+      const box = child.getBoundingClientRect();
+      const offset = y - box.top - box.height / 2;
+      return offset < 0 && offset > closest.offset ? { offset, element: child } : closest;
+    },
+    { offset: -Infinity, element: null }
+  ).element;
+}
+
+// Up / down buttons (touch + keyboard accessible)
+rankListEl.addEventListener("click", (e) => {
+  const btn = e.target.closest(".ranklist__move");
+  if (!btn) return;
+  const li = btn.closest(".ranklist__item");
+  if (btn.dataset.dir === "up" && li.previousElementSibling) {
+    rankListEl.insertBefore(li, li.previousElementSibling);
+  } else if (btn.dataset.dir === "down" && li.nextElementSibling) {
+    rankListEl.insertBefore(li.nextElementSibling, li);
   }
-  // all five must be present and unique (uniqueness enforced above, but verify)
-  const values = Object.values(ranks);
-  if (new Set(values).size !== 5) return null;
+  renumber();
+  rankError.hidden = true;
+  btn.focus();
+});
+
+// Order of the list is the ranking: position 1 = most preferred.
+function collectRanks() {
+  const items = [...rankListEl.children];
+  if (items.length !== ROUNDTABLES.length) return null;
+  const ranks = {};
+  items.forEach((li, i) => { ranks[li.dataset.id] = i + 1; });
   return ranks;
+}
+
+// Restore the list to its initial order (used after a successful submit).
+function resetRankList() {
+  ROUNDTABLES.forEach((rt) => {
+    const li = rankListEl.querySelector(`.ranklist__item[data-id="${rt.id}"]`);
+    if (li) rankListEl.appendChild(li);
+  });
+  renumber();
 }
 
 // ── Form submission ───────────────────────────────────────────────────────
@@ -118,13 +160,13 @@ form.addEventListener("submit", async (e) => {
     statusEl.classList.add("is-success");
     statusEl.textContent = "✓ You're registered, thank you! We'll be in touch about the roundtables.";
     form.reset();
-    rankGridEl.querySelectorAll("input:checked").forEach((i) => (i.checked = false));
+    resetRankList();
   } catch (err) {
     if (err instanceof DemoNotWired) {
       statusEl.classList.add("is-success");
       statusEl.textContent = "✓ Looks good! (Demo mode: connect the AWS endpoint in script.js to go live.)";
       form.reset();
-      rankGridEl.querySelectorAll("input:checked").forEach((i) => (i.checked = false));
+      resetRankList();
     } else {
       statusEl.classList.add("is-error");
       statusEl.textContent = "Something went wrong submitting. Please try again, or email sahiba.chopra@berkeley.edu.";
