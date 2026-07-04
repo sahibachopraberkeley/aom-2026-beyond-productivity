@@ -13,7 +13,7 @@ const ROUNDTABLES = [
   { id: "R2", leader: "Charles Ayoubi", short: "Lost in Compression: AI summarization & innovation evaluation" },
   { id: "R3", leader: "Michael Impink", short: "Training for digital tool use: Swiss watchmaking" },
   { id: "R4", leader: "Mathijs de Vaan", short: "Mapping the social & structural dynamics of AI adoption" },
-  { id: "R5", leader: "Sahiba Chopra", short: "Work & evaluation in collaborative settings" },
+  { id: "R5", leader: "Sahiba Chopra", short: "Effort opacity: GenAI & reciprocal effort in collaborative work" },
 ];
 
 // ── Build the ranking grid ────────────────────────────────────────────────
