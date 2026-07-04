@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Beyond AI Productivity//AOM 2026 PDW//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:beyond-ai-productivity-aom2026@sahibachopraberkeley.github.io
+DTSTAMP:20260704T000000Z
+DTSTART:20260731T120000Z
+DTEND:20260731T140000Z
+SUMMARY:Beyond AI Productivity (AOM 2026 PDW)
+LOCATION:Loews Hotel\, Congress C
+DESCRIPTION:Designing Research on AI Adoption\, Evaluation\, and Training. https://sahibachopraberkeley.github.io/aom-2026-beyond-productivity/
+URL:https://sahibachopraberkeley.github.io/aom-2026-beyond-productivity/
+END:VEVENT
+END:VCALENDAR
