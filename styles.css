@@ -101,6 +101,8 @@ em { font-style: normal; color: var(--emerald-deep); font-weight: 600; }
 .prose { max-width: 760px; font-size: 1.06rem; }
 .prose p { margin: 0 0 20px; color: var(--ink); }
 .prose p:last-child { margin-bottom: 0; }
+.prose a { color: var(--emerald-deep); font-weight: 600; text-decoration: underline; }
+.prose a:hover { color: var(--emerald); }
 .qlist { list-style: none; margin: 4px 0 24px; padding: 0; display: grid; gap: 12px; }
 .qlist li { position: relative; padding-left: 28px; color: var(--ink-soft); }
 .qlist li::before { content: "\2192"; position: absolute; left: 0; top: 0; color: var(--emerald); font-weight: 700; }
