@@ -5,7 +5,7 @@
 // ── CONFIG ────────────────────────────────────────────────────────────────
 // After deploying the AWS backend (see backend/DEPLOY.md), paste the API URL
 // here. Leave as-is to run the site in "demo" mode (logs instead of posting).
-const API_ENDPOINT = ""; // e.g. "https://abc123.execute-api.us-east-1.amazonaws.com/register"
+const API_ENDPOINT = "https://x4h3z2cxc2.execute-api.us-east-1.amazonaws.com/register";
 
 // Roundtables: order here is the order shown in the ranking grid.
 const ROUNDTABLES = [
