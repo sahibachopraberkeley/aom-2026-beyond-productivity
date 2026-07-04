@@ -184,7 +184,7 @@ input:invalid:not(:placeholder-shown), select.invalid, textarea:invalid:not(:pla
 
 .form__status { margin: 16px 0 0; font-weight: 600; text-align: center; min-height: 1.2em; }
 .form__status.is-error { color: #dc2626; }
-.form__status.is-success { color: var(--emerald-deep); }
+.form__status.is-success { color: var(--emerald-deep); background: var(--emerald-soft); border: 1px solid rgba(5, 150, 105, .25); border-radius: var(--radius-sm); padding: 14px 16px; }
 .form__note { text-align: center; color: var(--ink-soft); font-size: .85rem; margin: 14px 0 0; }
 
 /* ===== Footer ===== */

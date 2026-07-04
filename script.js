@@ -158,7 +158,7 @@ form.addEventListener("submit", async (e) => {
     if (!res.ok) throw new Error(`Server responded ${res.status}`);
 
     statusEl.classList.add("is-success");
-    statusEl.textContent = "✓ You're registered, thank you! We'll be in touch about the roundtables.";
+    statusEl.textContent = "✓ You're registered! Thank you. We'll use your rankings to group the roundtables and be in touch before the workshop.";
     form.reset();
     resetRankList();
   } catch (err) {
